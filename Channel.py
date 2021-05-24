@@ -1,3 +1,6 @@
+# TODO: Create an array that maps Person -> Occurrences (Similar to what already is done)
+#TODO: Reverse the above mapping i.e. Hour to Persons -> Occurrences
+# TODO: Mapping Person -> Hours -> Occurences
 from collections import Counter
 from pathlib import Path
 import pickle
