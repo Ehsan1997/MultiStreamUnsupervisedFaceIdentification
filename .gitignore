@@ -130,3 +130,6 @@ dmypy.json
 
 # Remove .idea files
 .idea/
+
+# Remove Image data and other data related to inference
+Dump/
