@@ -1,3 +1,4 @@
+# TODO: Live Stream Capability.
 from Channel import Channel
 from FaceModel import FaceModel
 from facenet_pytorch import MTCNN, InceptionResnetV1
