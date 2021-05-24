@@ -4,10 +4,11 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 import av
 
 
-def get_frame_from_vid(vid_path):
+def get_frame_from_vid(vid_path, n_skip_frame=30):
     container = av.open(vid_path)
     for i, frame in enumerate(container.decode(video=0)):
-        yield frame.to_ndarray(format='rgb24')
+        if i % n_skip_frame == 0:
+            yield frame.to_ndarray(format='rgb24')
 
 
 def recognize_faces(channel):
