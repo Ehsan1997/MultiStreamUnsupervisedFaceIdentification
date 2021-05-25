@@ -1,4 +1,3 @@
-# TODO: Live Stream Capability.
 import streamlink
 
 from Channel import Channel
@@ -61,7 +60,7 @@ channel2 = Channel("92-news", ninetytwo_url, get_frame_from_vid_live, face_model
 
 channels = [channel1, channel2]
 
-for _ in range(100):
+while True:
     for channel_ in channels:
         recognize_faces(channel_)
         print(channel_.name, ":", channel_.stats)
