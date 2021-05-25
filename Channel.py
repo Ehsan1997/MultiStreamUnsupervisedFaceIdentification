@@ -1,6 +1,7 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 import pickle
+from time import strftime, gmtime
 
 import av
 import torch
@@ -14,7 +15,12 @@ class Channel:
         self.name = name
         self.frame_retriever = frame_retriever(self.url)
         self.face_model = face_model
-        self.stats = stats if stats else {'person_frequency': Counter(), 'frame_count': 0}
+        self.stats = stats if stats else {
+            'person_frequency': Counter(),
+            'frame_count': 0,
+            'person_to_time': defaultdict(Counter),
+            'time_to_person': defaultdict(Counter)
+        }
         # Create Folders for required Directories.
         self.root_path = Path(root_path)
         self.path_dict = {"frames": self.root_path/Path("Frames"),
@@ -46,8 +52,13 @@ class Channel:
             self.db = torch.cat((self.db, embedding))
             return self.db.shape[0] - 1
 
-    def update_person_frequency(self, person_id):
+    def update_stats(self, person_id):
         self.stats["person_frequency"][person_id] += 1
+        # Get Timestamp for the current time.
+        timestamp = strftime("%Y%m%d%H%M", gmtime())
+        timestamp = timestamp[:-1]
+        self.stats["person_to_time"][person_id][timestamp] += 1
+        self.stats["time_to_person"][timestamp][person_id] += 1
 
     def save_frame(self, frame):
         Image.fromarray(frame).save(
