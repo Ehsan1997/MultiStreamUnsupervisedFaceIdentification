@@ -13,7 +13,7 @@ pycryptodome==3.10.1
 PySocks==1.7.1
 requests==2.25.1
 six==1.15.0
-streamlink==2.1.1
+streamlink==2.1.2
 torch==1.8.1
 torchvision==0.9.1
 typing-extensions==3.7.4.3

@@ -1,15 +1,26 @@
-# TODO: Live Stream Capability.
+import streamlink
+
 from Channel import Channel
 from FaceModel import FaceModel
 from facenet_pytorch import MTCNN, InceptionResnetV1
 import av
 
 
-def get_frame_from_vid(vid_path, n_skip_frame=30):
-    container = av.open(vid_path)
+def frame_retriever_base(container, n_skip_frame=30):
     for i, frame in enumerate(container.decode(video=0)):
         if i % n_skip_frame == 0:
             yield frame.to_ndarray(format='rgb24')
+
+
+def get_frame_from_vid(vid_path, n_skip_frame=30):
+    container = av.open(vid_path)
+    return frame_retriever_base(container, n_skip_frame)
+
+
+def get_frame_from_vid_live(vid_url, n_skip_frame=30):
+    vid_url = streamlink.streams(vid_url)['best'].url
+    container = av.open(vid_url, format='segment')
+    return frame_retriever_base(container, n_skip_frame)
 
 
 def recognize_faces(channel):
@@ -25,7 +36,7 @@ def recognize_faces(channel):
     embedding_tensor = embedding_tensor.unsqueeze(1)
     for i in range(len(face_tensor)):
         person_id = channel.assign_id(embedding_tensor[i])
-        channel.update_person_frequency(person_id)
+        channel.update_stats(person_id)
         channel.save_face(face_tensor[i], person_id)
     channel.save_stats()
 
@@ -38,15 +49,18 @@ face_model = FaceModel(
         ),
     InceptionResnetV1(pretrained='vggface2')
 )
-vid_path = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVideo_CapitalTalk.mp4'
-vid_path1 = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVid2-KamranKhan.mp4'
+# vid_path = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVideo_CapitalTalk.mp4'
+# vid_path1 = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVid2-KamranKhan.mp4'
 
-channel1 = Channel("Geo", vid_path, get_frame_from_vid, face_model, "Dump/Geo")
-channel2 = Channel("Dunya", vid_path1, get_frame_from_vid, face_model, 'Dump/Dunya')
+samaa_url = 'https://www.youtube.com/watch?v=AV46m7rTVG4'
+ninetytwo_url = 'https://www.youtube.com/watch?v=zWj87fKufXg'
+
+channel1 = Channel("samaa", samaa_url, get_frame_from_vid_live, face_model, "Dump/Samaa")
+channel2 = Channel("92-news", ninetytwo_url, get_frame_from_vid_live, face_model, 'Dump/92_News')
 
 channels = [channel1, channel2]
 
-for _ in range(10000):
+while True:
     for channel_ in channels:
         recognize_faces(channel_)
         print(channel_.name, ":", channel_.stats)
