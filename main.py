@@ -53,7 +53,7 @@ face_model = FaceModel(
 # vid_path1 = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVid2-KamranKhan.mp4'
 
 samaa_url = 'https://www.youtube.com/watch?v=AV46m7rTVG4'
-ninetytwo_url = 'https://www.youtube.com/watch?v=zWj87fKufXg'
+ninetytwo_url = 'https://www.youtube.com/watch?v=khPUii1Qn4k'
 
 channel1 = Channel("samaa", samaa_url, get_frame_from_vid_live, face_model, "Dump/Samaa")
 channel2 = Channel("92-news", ninetytwo_url, get_frame_from_vid_live, face_model, 'Dump/92_News')
