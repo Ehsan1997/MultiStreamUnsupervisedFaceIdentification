@@ -36,7 +36,7 @@ def recognize_faces(channel):
     embedding_tensor = embedding_tensor.unsqueeze(1)
     for i in range(len(face_tensor)):
         person_id = channel.assign_id(embedding_tensor[i])
-        channel.update_person_frequency(person_id)
+        channel.update_stats(person_id)
         channel.save_face(face_tensor[i], person_id)
     channel.save_stats()
 
@@ -52,10 +52,10 @@ face_model = FaceModel(
 # vid_path = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVideo_CapitalTalk.mp4'
 # vid_path1 = r'C:\Users\Ehsan\PycharmProjects\live_face_rec_dashboard\SampleVid2-KamranKhan.mp4'
 
-bol_url = 'https://www.youtube.com/watch?v=VEFUISG8ooc'
+samaa_url = 'https://www.youtube.com/watch?v=AV46m7rTVG4'
 ninetytwo_url = 'https://www.youtube.com/watch?v=zWj87fKufXg'
 
-channel1 = Channel("bol", bol_url, get_frame_from_vid_live, face_model, "Dump/Bol")
+channel1 = Channel("samaa", samaa_url, get_frame_from_vid_live, face_model, "Dump/Samaa")
 channel2 = Channel("92-news", ninetytwo_url, get_frame_from_vid_live, face_model, 'Dump/92_News')
 
 channels = [channel1, channel2]
